@@ -19,8 +19,10 @@ CREATE TABLE `Usuario` (
   `Contraseña` varchar(100) NOT NULL,
   `Email` varchar(100) NOT NULL,
   `Telefono` varchar(100) NOT NULL,
-  `Direccion` varchar(300) NOT NULL
-) ENGINE='InnoDB';
+  `Direccion` varchar(300) NOT NULL,
+  `Tipo` enum('OPERARIO','CLIENTE') NOT NULL
+) ENGINE=InnoDB;
+
 
 CREATE TABLE `Pedido` (
   `id` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -40,8 +42,9 @@ CREATE TABLE `Linea_Pedido` (
   FOREIGN KEY (`Producto`) REFERENCES `Camiseta` (`id`)
 ) ENGINE='InnoDB';
 
+
+
+INSERT INTO `Usuario` (`Nombre_Usuario`, `Contraseña`, `Email`, `Telefono`, `Direccion`, `Tipo`)
+VALUES ('joaquin', '$2a$10$2HfFzDDJ1iY9Fv01v1lck.4tKVUd6eY/SGslObHnwe0ZD0KHJo1/S', 'dojoaquindo@gmail.com', '012345678', 'Mi casa, 34675, La Conchinchina', 'OPERArIO');
+
 -- joaquin Secreto_123
-
-INSERT INTO `Usuario` (`Nombre_Usuario`, `Contraseña`, `Email`, `Telefono`, `Direccion`)
-VALUES ('joaquin', '$2a$10$2HfFzDDJ1iY9Fv01v1lck.4tKVUd6eY/SGslObHnwe0ZD0KHJo1/S', 'dojoaquindo@gmail.com', '012345678', 'Mi casa, 34675, La Conchinchina');
-
