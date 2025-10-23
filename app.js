@@ -9,6 +9,11 @@ const dotenv = require('dotenv')
 
 dotenv.config({ path: '/stack.camisetas/.env'})
 
+
+//cargo mis enroutadores
+
+const camisetaRouter = require('./routes/camisetaRouter')
+
 //Configuración de pug
 app.set('view engine', 'pug')
 
@@ -27,6 +32,10 @@ app.post('/login', (req,res) => {
   const { username, password } = req.body
     res.send('Has hecho login con el usuario: ' + username + ' y la contraseña : ' + password )
 })
+
+
+app.use('/admin/camiseta', camisetaRouter)
+
 app.get('/camisetas', (req, res) => {
   res.send('Listado de camisetas')
 })
