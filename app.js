@@ -1,47 +1,38 @@
+// Cargamos módulos
 const express = require('express')
 const session = require('express-session')
-const mysql = require('mysql2')
 const bodyParser = require('body-parser')
 const path = require('path')
-const app = express()
-const port = 3000
-const dotenv = require('dotenv')
-
-dotenv.config({ path: '/stack.camisetas/.env'})
-
-
-//cargo mis enroutadores
-
 const camisetaRouter = require('./routes/camisetaRouter')
+const authRouter = require('./routes/authRouter')
 
-//Configuración de pug
+// crea el objeto servidor Web
+// todavía no sirve páginas (hay que darle
+// la orden)
+const app = express()
+
+// cargo el .ENV (el mismo de DOCKER)
+require('dotenv').config({ path: './stack-camisetas/.env' })
+const port = process.env.APP_PORT
+
+
+// Configuración de Pug
 app.set('view engine', 'pug')
+// Le decimos a express que use bodyparser
+// para recoger datos de formularios
+app.use(bodyParser.urlencoded({ extended: true }))
 
-app.use(bodyParser.urlencoded({extended: true}))
-app.set('views', path.join(__dirname, 'views'))
+app.use( (req,res,next) =>{
+  console.log("El middleware interceptó una petición.")
+  next()
+} )
 
-app.get('/', (req, res) => {
-  res.render('hola')
-})
-
-app.get('/login', (req, res) => {
-  res.render('login')
-})
-
-app.post('/login', (req,res) => {
-  const { username, password } = req.body
-    res.send('Has hecho login con el usuario: ' + username + ' y la contraseña : ' + password )
-})
+app.use('/admin/camiseta',camisetaRouter)
+app.use('/auth', authRouter)
 
 
-app.use('/admin/camiseta', camisetaRouter)
-
-app.get('/camisetas', (req, res) => {
-  res.send('Listado de camisetas')
-})
-
+// le doy la orden de escuchar en el puerto 
+// indicado y servir páginas Web
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
-
-

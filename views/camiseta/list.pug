@@ -1,15 +1,14 @@
-doctype html
-html(lang="en")
-    head
-        meta(charset="UTF-8")
-        meta(name="viewport", content="width=device-width, initial-scale=1.0")
-        title Camisetas
-    body
+extends ../layouts/main
+
+block contenido
+
         h2 Listado de camisetas
-        table 
-            thead
+        if mensaje!=null
+            p= mensaje
+        table.table
+            thead 
                 tr 
-                    th id 
+                    th id
                     th talla 
                     th sexo 
                     th color 
@@ -17,15 +16,23 @@ html(lang="en")
                     th stock 
                     th precio 
                     th activo
-            tbdody
+                    th editar
+                    th borrar
+            tbody 
                 each camiseta in camisetas
                     tr 
-                        td=camiseta.id 
+                        td=camiseta.id
                         td=camiseta.talla 
                         td=camiseta.sexo 
-                        td=camiseta.color 
+                        td
+                            span(style=`color:${camiseta.color}`)=camiseta.color 
                         td=camiseta.marca 
                         td=camiseta.stock 
                         td=camiseta.precio 
-                        td=camiseta.activo
-                        td 
+                        td=camiseta.activo==1
+                        td
+                            a.btn.btn-success(href=`/admin/camiseta/edit/${camiseta.id}`) editar
+                        td
+                            a.btn.btn-danger(href=`/admin/camiseta/del/${camiseta.id}`) borrar
+        p  
+            a(href="/admin/camiseta/add") Añadir una nueva
