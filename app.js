@@ -4,7 +4,9 @@ const session = require('express-session')
 const bodyParser = require('body-parser')
 const path = require('path')
 const camisetaRouter = require('./routes/camisetaRouter')
-const authRouter = require('./routes/authRouter')
+const usuarioRoutes = require('./routes/usuario')
+app.use('/admin/usuario', usuarioRoutes)
+
 
 // crea el objeto servidor Web
 // todavía no sirve páginas (hay que darle
