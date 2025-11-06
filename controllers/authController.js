@@ -6,7 +6,37 @@ exports.loginForm = (req, res) => {
     res.render('auth/login')
 }
 
+exports.login = (req, res) => {
+    const {username, password} = req.body;
+    const sql = "SELECT * FROM usuario WHERE username=?"
+    // busco el usuario por username
+    db.query(sql, [username], (error, result) => {
+        if (error) {
+            res.render('error', {mensaje: 'Imposible localizar el usuario en base de datos'})
+            console.log(error)
+        } else {
+            // console.log(result)
+            if (result[0]) {                
+                // usuario habilitado y el pass coincide
+                if(result[0].activo==1 && bcrypt.compareSync(password, result[0].password)){                    
+                    req.session.user = result[0].username
+                    req.session.tipo = result[0].tipo
+                    res.redirect('/')
+                } else {
+                    res.render('error', {mensaje: 'Credenciales incorrectas.'})
+                }
+            }else {
+                res.render('error', {mensaje: 'El usuario no existe'})
+            }
+        }
+    })
+    // res.redirect('/')
+}
 
+exports.logout = (req, res) => {
+    req.session.destroy();
+    res.redirect('/')
+}
 
 exports.registerForm = (req, res) => {
     res.render('auth/register')

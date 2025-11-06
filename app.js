@@ -1,12 +1,14 @@
 // Cargamos módulos
+// Enrutador (backend)
 const express = require('express')
+// Soporte de sesiones de Express 
 const session = require('express-session')
 const bodyParser = require('body-parser')
 const path = require('path')
 const camisetaRouter = require('./routes/camisetaRouter')
-const usuarioRoutes = require('./routes/usuario')
-app.use('/admin/usuario', usuarioRoutes)
-
+const authRouter = require('./routes/authRouter')
+const carroRouter = require('./routes/carroRouter')
+const productoRouter = require('./routes/productoRouter.js')
 
 // crea el objeto servidor Web
 // todavía no sirve páginas (hay que darle
@@ -24,14 +26,39 @@ app.set('view engine', 'pug')
 // para recoger datos de formularios
 app.use(bodyParser.urlencoded({ extended: true }))
 
+// habilitamos sesiones
+app.use(session({     
+  secret: process.env.SESSION_SECRET,     
+  resave: true,     
+  saveUninitialized: false
+}))
+
+// Middleware para capturar rutas
 app.use( (req,res,next) =>{
-  console.log("El middleware interceptó una petición.")
-  next()
+  res.locals.currentUser = req.session.user;
+  
+  if (req.path.startsWith('/auth')) {
+    console.log('AUTH')
+    next()
+  } else {
+    if (req.path.startsWith('/admin')) {
+      if (req.session.tipo == 'OPERADOR') next()
+      else res.redirect('/auth/login')
+    } else {
+      next()
+    }        
+  }
 } )
 
-app.use('/admin/camiseta',camisetaRouter)
+app.use('/admin/camiseta', camisetaRouter)
 app.use('/auth', authRouter)
+app.use('/carro', carroRouter)
+app.use('/camiseta', productoRouter)
 
+// TO_DO meterlo en un controlador de rutas generales
+app.get('/', (req, res) =>{
+  res.render('index')
+})
 
 // le doy la orden de escuchar en el puerto 
 // indicado y servir páginas Web
