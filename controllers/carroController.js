@@ -39,12 +39,58 @@ exports.addCamiseta = (req, res) => {
     res.redirect('/carro')
 }
 
+exports.delCamisetaForm = (req, res) => {
+    const { id } = req.params;
+
+    if (isNaN(id)){
+        res.render(
+            'error',
+            {mensaje:'Borrando del carro: falta un parámetro'})
+    }
+
+    let query = 'SELECT * FROM camiseta where id=?'
+
+    db.query(query, id, (error, resultado)=>{
+        if (error) {
+            res.render('error', {
+                mensaje: 'Imposible acceder al producto'})
+        } else {
+            datos = resultado[0]
+            res.render('carro/del')
+        }
+    })
+}
+
+
+exports.delCamiseta = (req,res) =>{
+    const { pedido, producto, cantida} = req.body
+    const { id } = req.params
+
+    const sql = "DELETE FROM `pedido` where id=?"
+    db.query(query, id, (error,resultado) =>{
+        if (error) {
+            res.render('error', {
+                mensaje: 'Imposible borrar del carro'
+            })
+        }
+    })
+    res.redirect('/carro')
+}
+
+
+exports.procesarCarroForm = (req, res) => {
+    
+} 
 /*
 // añadir al carro
 router.get('/add/camiseta/:id', carroController.addCamisetaForm)
 router.post('/add/camiseta/:id', carroController.addCamiseta)
 
+
+
+
 // quitar del carro
+
 router.get('/del/camiseta/:id', carroController.delCamisetaForm)
 router.post('/del/camiseta/:id', carroController.delCamiseta)
 

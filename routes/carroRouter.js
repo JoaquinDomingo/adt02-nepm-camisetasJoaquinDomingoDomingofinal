@@ -1,14 +1,21 @@
-const express = require('express');
-const router = express.Router();
-const authController = require('../controllers/authController');
+const { urlencoded } = require('body-parser')
+const db = require('../db')
+const router = require('../routes/camisetaRouter')
+const carroController = require('../controllers/carroController')
 
+// añadir al carro
+router.get('/add/camiseta/:id', carroController.addCamisetaForm)
+router.post('/add/camiseta/:id', carroController.addCamiseta)
+/*
+// quitar del carro
+router.get('/del/camiseta/:id', carroController.delCamisetaForm)
+router.post('/del/camiseta/:id', carroController.delCamiseta)
 
-router.get('/login', authController.loginForm)
-router.post('/login', authController.login)
+// pagar
+router.get('/procesar', carroController.procesarCarroForm)
+router.post('/procesar', carroController.procesarCarro)
+*/
+// ver el contenido de la cesta de la compra
+// router.get('/', carroController.muestraCarro)
 
-router.get('/register', authController.registerForm)
-router.post('/register', authController.register)
-
-router.get('/logout', authController.logout)
-
-module.exports=router
+module.exports=router;
